@@ -1,0 +1,63 @@
+
+#' relationship plot
+#' @description Examine the relationship between two vectors from data
+#' @inheritParams area_plot
+#' @inheritParams model_plot
+#' @examples
+#' rel_plot(mtcars, "wt", "hp")
+#' rel_plot(mtcars, "wt", "hp", "factor(cyl)")
+#' rel_plot(mtcars, "factor(cyl)", "hp")
+#' @export
+rel_plot = function(data, x,  y, group = NULL,
+                    size = 14,
+                    point_size = 2.5) {
+
+  cols = c(x = unname(x),
+           y = unname(y),
+           group = unname(group))
+
+  gdata = data %>%
+    transmute_(.dots = cols)
+
+  if (!exists("group", gdata)) {
+    gdata[["group"]] = ""
+  }
+
+  n_group = length(unique(gdata[["group"]]))
+
+  if (is.numeric(gdata[["x"]])) {
+    g = ggplot(gdata) +
+      geom_point(aes(x, y, color = group), size = point_size) +
+      geom_smooth(aes(x, y, color = group), method = "lm") +
+      scale_color_manual(NULL, values = ez_col(n_group),
+                         labels = function(x) paste0(x, "   ")) +
+      scale_x_continuous(labels = ez_labels) +
+      scale_y_continuous(labels = ez_labels)
+  } else {
+    g = ggplot(gdata) +
+      geom_boxplot(aes(x, y, colour = group), size = 0.8, na.rm = TRUE) +
+      scale_color_manual(NULL, values = ez_col(n_group),
+                         labels = function(x) paste0(x, "   ")) +
+      scale_y_continuous(labels = ez_labels)
+  }
+
+  g = g +
+    theme_ez(size) +
+    xlab(names(x)) +
+    ylab(names(y))
+
+  if (n_group == 1) {
+    g = g + theme(legend.position = "none")
+  } else {
+    g = g + theme(legend.key = element_rect(colour = NA,
+                                            fill = NA),
+                  legend.key.height = grid::unit(1.5, "lines"))
+  }
+
+  g +
+    guides(color=guide_legend(override.aes = list(fill = NA))) +
+    theme(axis.line.x = element_line(color = "grey85",
+                                     size = if (size > 16) 0.8 else 0.2))
+
+
+}

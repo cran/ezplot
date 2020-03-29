@@ -9,18 +9,23 @@
 #' scatter_plot(mtcars, "factor(cyl)", "hp")
 #' @export
 scatter_plot = function(data, x,  y, group = NULL,
-                    size = 14,
-                    point_size = 2.5) {
+                        size = 11,
+                        point_size = 2.5,
+                        env = parent.frame()) {
 
   cols = c(x = unname(x),
            y = unname(y),
            group = unname(group))
 
   gdata = data %>%
-    transmute_(.dots = cols)
+    as.data.frame() %>%
+    transmute(!!!lapply(cols,
+                        function(x) rlang::parse_quo(x, env = env)))
 
   if (!exists("group", gdata)) {
     gdata[["group"]] = ""
+  } else {
+    gdata[["group"]] = factor(gdata[["group"]])
   }
 
   n_group = length(unique(gdata[["group"]]))
@@ -28,7 +33,7 @@ scatter_plot = function(data, x,  y, group = NULL,
   if (is.numeric(gdata[["x"]])) {
     g = ggplot(gdata) +
       geom_point(aes(x, y, color = group), size = point_size) +
-      geom_smooth(aes(x, y, color = group), method = "lm") +
+      geom_smooth(aes(x, y, color = group), method = "lm", formula = y ~ x) +
       scale_color_manual(NULL, values = ez_col(n_group),
                          labels = function(x) paste0(x, "   ")) +
       scale_x_continuous(labels = ez_labels) +

@@ -1,20 +1,20 @@
-## ----setup, include = FALSE----------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 
-## ---- fig.show='hold'----------------------------------------------------
+## ---- fig.show='hold'---------------------------------------------------------
 library(ezplot)
 library(tsibbledata)
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(lubridate))
 
-## ---- echo=TRUE, results='asis'------------------------------------------
+## ---- echo=TRUE, results='asis', fig.width = 7.1------------------------------
 line_plot(ansett, x = "Week", y = "Passengers")
 line_plot(ansett, x = "Week", y = "Passengers", group = "Class")
 
-## ---- echo=TRUE, results='asis'------------------------------------------
+## ---- echo=TRUE, results='asis', fig.width = 7.1------------------------------
 
 df = ansett %>% 
   filter(between(year(Week), 1988, 1991))

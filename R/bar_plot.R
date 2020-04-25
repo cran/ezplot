@@ -129,7 +129,8 @@ bar_plot = function(data,
     g = g +
       geom_col(aes(x, y,
                    fill = group),
-               width = width) +
+               width = width,
+               orientation = "x") +
       scale_fill_manual(NULL,
                         values = fill_pal,
                         labels = function(x) paste0(x, "   "),
@@ -140,6 +141,7 @@ bar_plot = function(data,
     g = g +
       geom_col(aes(x, y),
                fill = fill_pal,
+               orientation = "x",
                width = width)
   }
 
@@ -176,7 +178,7 @@ bar_plot = function(data,
     g = g +
       geom_text(data = top_labels,
                 aes(x,
-                    top_y + y_range / 100,# TODO: apply h offset here if coord_flip
+                    top_y + y_range / 100,
                     label = top_ylabel_text),
                 size = size / 4,
                 vjust = if (coord_flip) 0.42 else -0.5,

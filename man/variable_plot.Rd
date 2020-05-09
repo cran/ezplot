@@ -16,7 +16,8 @@ variable_plot(
   size_line = 1,
   ylab = NULL,
   yoy = FALSE,
-  switch = "y"
+  switch = "y",
+  rescale_y = 1
 )
 }
 \arguments{
@@ -45,6 +46,8 @@ Default is \code{FALSE}.}
 
 \item{switch}{Option to switch location of variable (facet) labels. Default
 is 'y' (yes) which shows facet strips on left side of panels.}
+
+\item{rescale_y}{Rescaling factor for y-axis limits}
 }
 \description{
 Plots variables (multiple "y" values) broken out as vertical
@@ -56,15 +59,15 @@ variable_plot(ansett, "Week", "Passengers", facet_x = "Class")
 variable_plot(ansett, "Week", "Passengers", facet_x = "Class", yoy = TRUE)
 variable_plot(pelt, "Year", c("Lynx", "Hare"), "round(Year, -1)")
 variable_plot(hh_budget, "Year", c("Debt", "Expenditure"), "Country")
-variable_plot(subset(hh_budget, Year > 2013), "Year",
-              c("Debt\n(\% of disposable income)" = "Debt",
-                "Expenditure\nGrowth (\%)" = "Expenditure",
-                "Unemployment (\%)" = "Unemployment"),
-               group = "Country", geom = "bar")
+variable_plot(PBS, "Type", "Scripts", "Concession", switch = "y", geom = "col")
 variable_plot(subset(hh_budget, Year > 2013), "Year",
               c("Debt\n(\% of disposable income)" = "Debt",
                 "Expenditure\nGrowth (\%)" = "Expenditure",
                 "Unemployment (\%)" = "Unemployment"),
                facet_x = "Country", geom = "bar")
-variable_plot(PBS, "Type", "Scripts", "Concession", switch = "y", geom = "col")
+variable_plot(subset(hh_budget, Year > 2013), "Year",
+              c("Debt\n(\% of disposable income)" = "Debt",
+                "Expenditure\nGrowth (\%)" = "Expenditure",
+                "Unemployment (\%)" = "Unemployment"),
+               group = "Country", geom = "bar")
 }

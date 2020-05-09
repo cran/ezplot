@@ -1,11 +1,11 @@
 #' waterfall_plot
 #' @description function for creating waterfall charts
 #' @inheritParams area_plot
+#' @inheritParams bar_plot
 #' @param labels Function for formatting labels.
 #' @param label_rescale Scaling factor for chart labels (relative to axis
 #'   labels).
 #' @param y_min Minimum limit of y axis.
-#' @param rescale_y Scaling factor to extend y_max.
 #' @param n_signif Number of significant figures in labels.
 #' @param rotate_xlabel Logical.
 #' @param bottom_label Logical.
@@ -209,7 +209,7 @@ waterfall_plot = function(data,
 
   if (rotate_xlabel) {
     g = g + theme(axis.text.x = element_text(angle = 90,
-                                             vjust = 0.5,
+                                             vjust = 0.38,
                                              hjust = 1))
   }
 
@@ -217,11 +217,11 @@ waterfall_plot = function(data,
     g = g +
       geom_text(aes(x_pos, y_min,
                     label = percent_label),
-                vjust = -0.5,
+                vjust = -0.2,
                 size = label_rescale * size / 4) +
       geom_text(aes(x_pos, y_min,
                     label = percent_label_0),
-                vjust = -0.5,
+                vjust = -0.2,
                 colour = 'white',
                 size = label_rescale * size / 4)
 

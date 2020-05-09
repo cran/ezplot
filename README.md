@@ -55,6 +55,7 @@ library(tsibbledata)
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(ggplot2))
 suppressPackageStartupMessages(library(lubridate))
+suppressPackageStartupMessages(library(ROCR, warn.conflicts = FALSE))
 ```
 
 ### line\_plot
@@ -234,3 +235,66 @@ secondary_plot(pelt, "Year",
 ```
 
 <img src="man/figures/README-secondary_plot-1-1.png" style="display: block; margin: auto;" />
+
+``` r
+nyc_bikes %>% 
+  mutate(duration = as.numeric(stop_time - start_time)) %>%
+  density_plot(c("time of day" = "as.numeric(start_time) %% 86400 / 60 / 60"),
+               group = "ifelse(wday(start_time) %in% c(1, 7), 'week end', 'week day')")
+```
+
+<img src="man/figures/README-density_plot-1-1.png" style="display: block; margin: auto;" />
+
+``` r
+nyc_bikes %>% 
+  mutate(duration = as.numeric(stop_time - start_time)) %>%
+  histogram_plot(c("time of day" = "as.numeric(start_time) %% 86400 / 60 / 60"),
+                 "density",
+                 group = "ifelse(wday(start_time) %in% c(1, 7), 'week end', 'week day')",
+                 position = "identity",
+                 bins = 48)
+```
+
+<img src="man/figures/README-histogram_plot-1-1.png" style="display: block; margin: auto;" />
+
+``` r
+data(ROCR.simple)
+
+df = data.frame(pred = ROCR.simple$predictions,
+                lab = ROCR.simple$labels)
+
+set.seed(4)
+roc_plot(df, "lab", "pred")
+```
+
+<img src="man/figures/README-roc_plot-1-1.png" style="display: block; margin: auto;" />
+
+``` r
+roc_plot(df, "lab", "pred", group = "sample(c(0, 1), n(), replace = TRUE)")
+```
+
+<img src="man/figures/README-roc_plot-1-2.png" style="display: block; margin: auto;" />
+
+``` r
+pr_plot(df, "lab", "pred")
+```
+
+<img src="man/figures/README-roc_plot-1-3.png" style="display: block; margin: auto;" />
+
+``` r
+pr_plot(df, "lab", "pred", group = "sample(c(0, 1), n(), replace = TRUE)")
+```
+
+<img src="man/figures/README-roc_plot-1-4.png" style="display: block; margin: auto;" />
+
+``` r
+lift_plot(df, "lab", "pred")
+```
+
+<img src="man/figures/README-roc_plot-1-5.png" style="display: block; margin: auto;" />
+
+``` r
+lift_plot(df, "lab", "pred", group = "sample(c(0, 1), n(), replace = TRUE)")
+```
+
+<img src="man/figures/README-roc_plot-1-6.png" style="display: block; margin: auto;" />

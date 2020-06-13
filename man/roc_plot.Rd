@@ -6,11 +6,12 @@
 \usage{
 roc_plot(
   data,
-  actual,
   fitted,
+  actual,
   group = NULL,
   facet_x = NULL,
   facet_y = NULL,
+  palette = ez_col,
   size_line = 1,
   size = 11,
   env = parent.frame()
@@ -19,15 +20,17 @@ roc_plot(
 \arguments{
 \item{data}{A data.frame.}
 
-\item{actual}{Vector of actuals values}
-
 \item{fitted}{Vector of fitted values}
+
+\item{actual}{Vector of actual values}
 
 \item{group}{A character value. Evaluates to a column.}
 
 \item{facet_x}{A character value. Evaluates to a column.}
 
 \item{facet_y}{A character. Evaluates to a column.}
+
+\item{palette}{Colour function.}
 
 \item{size_line}{width of line for \code{geom_line()}. Default is 1.}
 
@@ -49,18 +52,18 @@ ggplot(df) +
   geom_density(aes(fitted, fill = actual), alpha = 0.5)
 
 roc_plot(df, "actual", "actual")
-roc_plot(df, "actual", "fitted")
-roc_plot(df, "actual", "runif", size_line = 0.5)
+roc_plot(df, "fitted", "actual")
+roc_plot(df, "runif", "actual", size_line = 0.5)
 
 \donttest{
 library(dplyr, warn.conflicts = FALSE)
-roc_plot(df, "actual", "fitted", "sample(c(1, 2), n(), TRUE)")
+roc_plot(df, "fitted", "actual", "sample(c(1, 2), n(), TRUE)")
 
-roc_plot(df, "actual", "fitted",
+roc_plot(df, "fitted", "actual",
          "sample(c(1, 2), n(), TRUE)",
          "sample(c(3, 4), n(), TRUE)")
 
-roc_plot(df, "actual", "fitted",
+roc_plot(df, "fitted", "actual",
          "sample(c(1, 2), n(), TRUE)",
          "sample(c(3, 4), n(), TRUE)",
          "sample(c(5, 6), n(), TRUE)")

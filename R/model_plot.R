@@ -2,8 +2,8 @@
 
 #' model_plot
 #' @inheritParams area_plot
-#' @param actual A character value. Evaluates to a column.
-#' @param fitted A character value. Evaluates to a column.
+#' @param fitted A character value. Evaluates to a numeric column.
+#' @param actual A character value. Evaluates to a logical or binary column.
 #' @param res_bins Number of bins in the residual distribution. Default value
 #'   (NA) doesn't show the distribution.
 #' @param point_size Numeric. Default is 2.
@@ -41,7 +41,7 @@ model_plot = function(data,
 
   gdata = gdata %>%
     group_by_at(vars(matches("facet_x"))) %>%
-    mutate(min_af = min(Actual, Fitted, na.rm = TRUE),
+    mutate(min_af = min(Fitted, Actual, na.rm = TRUE),
            max_res = max(Residual, na.rm = TRUE)) %>%
     ungroup
 

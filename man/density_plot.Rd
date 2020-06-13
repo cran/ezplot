@@ -10,6 +10,7 @@ density_plot(
   group = NULL,
   facet_x = NULL,
   facet_y = NULL,
+  palette = ez_col,
   adjust = 1,
   alpha = 0.5,
   facet_scales = "fixed",
@@ -28,6 +29,8 @@ density_plot(
 
 \item{facet_y}{A character. Evaluates to a column.}
 
+\item{palette}{Colour function.}
+
 \item{adjust}{multiplicate bandwidth adjustment}
 
 \item{alpha}{alpha}
@@ -44,7 +47,8 @@ density_plot(
 creates a density plot
 }
 \examples{
+library(tsibbledata)
 density_plot(mtcars, "wt", "cyl")
-density_plot(subset(tsibbledata::olympic_running, Length == "100m" & Year >= 1980),
+density_plot(subset(tsibbledata::olympic_running, Length == 100 & Year >= 1980),
              "Time", "Year - Year \%\% 10", "Sex", facet_scales = "free", facet_ncol = 1, adjust = 2)
 }

@@ -8,6 +8,7 @@ knitr::opts_chunk$set(
 
 ## ----setup--------------------------------------------------------------------
 library(ezplot)
+library(tsibble)
 library(tsibbledata)
 suppressPackageStartupMessages(library(lubridate))
 library(ggplot2)
@@ -42,10 +43,10 @@ line_plot(hh_budget,
   
 
 ## -----------------------------------------------------------------------------
-area_plot(ansett, x = "Week", y = "Passengers")
+area_plot(ansett, x = "as.Date(Week)", y = "Passengers")
 
 ## -----------------------------------------------------------------------------
-area_plot(ansett, x = "Week",
+area_plot(ansett, x = "as.Date(Week)",
           y = c("Weekly Passengers" = "Passengers"),
           "Class")
 

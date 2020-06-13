@@ -9,6 +9,7 @@
 #' @param geom Either "line", "col" or "bar". Default is "line"
 #' @export
 #' @examples
+#' library(tsibble)
 #' library(tsibbledata)
 #' variable_plot(ansett, "Week", "Passengers", facet_x = "Class")
 #' variable_plot(ansett, "Week", "Passengers", facet_x = "Class", yoy = TRUE)
@@ -29,6 +30,7 @@ variable_plot = function(data,
                          x, y,
                          group = NULL,
                          facet_x = NULL,
+                         palette = ez_col,
                          size = 14,
                          labels_y = ez_labels,
                          geom = "line",
@@ -91,7 +93,7 @@ variable_plot = function(data,
       g = ggplot(gdata) +
         geom_line(aes(x, value, colour = factor(group)), size = size_line, na.rm = FALSE) +
         scale_colour_manual(NULL,
-                            values = ez_col(length(unique(gdata[["group"]]))),
+                            values = palette(length(unique(gdata[["group"]]))),
                             labels = function(x) paste0(x, "   "))
 
       if (yoy) {
@@ -102,7 +104,7 @@ variable_plot = function(data,
 
     } else {
       g = ggplot(gdata) +
-        geom_line(aes(x, value), size = size_line, colour = ez_col(1), na.rm = FALSE)
+        geom_line(aes(x, value), size = size_line, colour = palette(1), na.rm = FALSE)
     }
   } else if (geom %in% c("bar", "col")) {
 
@@ -121,7 +123,7 @@ variable_plot = function(data,
                  orientation = "x",
                  na.rm = TRUE) +
         scale_fill_manual(NULL,
-                          values = ez_col(length(unique(gdata[["group"]]))),
+                          values = palette(length(unique(gdata[["group"]]))),
                           labels = function(x) paste0(x, "   "))
 
       g = g +
@@ -140,7 +142,7 @@ variable_plot = function(data,
 
       g = ggplot(gdata) +
         geom_col(aes(x, value),
-                 fill = ez_col(1),
+                 fill = palette(1),
                  orientation = "x",
                  na.rm = TRUE)
 

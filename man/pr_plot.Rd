@@ -6,11 +6,12 @@
 \usage{
 pr_plot(
   data,
-  actual,
   fitted,
+  actual,
   group = NULL,
   facet_x = NULL,
   facet_y = NULL,
+  palette = ez_col,
   size_line = 1,
   size = 11,
   labs = "short",
@@ -20,15 +21,17 @@ pr_plot(
 \arguments{
 \item{data}{A data.frame.}
 
-\item{actual}{Vector of actuals values}
-
 \item{fitted}{Vector of fitted values}
+
+\item{actual}{Vector of actual values}
 
 \item{group}{A character value. Evaluates to a column.}
 
 \item{facet_x}{A character value. Evaluates to a column.}
 
 \item{facet_y}{A character. Evaluates to a column.}
+
+\item{palette}{Colour function.}
 
 \item{size_line}{width of line for \code{geom_line()}. Default is 1.}
 
@@ -48,21 +51,20 @@ df = data.frame(actual = sample(c(FALSE, TRUE), n, replace = TRUE),
                 runif = runif(n))
 df[["fitted"]] = runif(n) ^ ifelse(df[["actual"]] == 1, 0.5, 2)
 
-ggplot(df) +
-  geom_density(aes(fitted, fill = actual), alpha = 0.5)
+density_plot(df, "fitted", "actual")
 
-pr_plot(df, "actual", "fitted")
-pr_plot(df, "actual", "runif", size_line = 0.5)
+pr_plot(df, "fitted", "actual")
+pr_plot(df, "runif", "actual", size_line = 0.5)
 
 \donttest{
 library(dplyr, warn.conflicts = FALSE)
-pr_plot(df, "actual", "fitted", "sample(c(1, 2), n(), TRUE)")
+pr_plot(df, "fitted", "actual", "sample(c(1, 2), n(), TRUE)")
 
-pr_plot(df, "actual", "fitted",
+pr_plot(df, "fitted", "actual",
         "sample(c(1, 2), n(), TRUE)",
         "sample(c(3, 4), n(), TRUE)")
 
-pr_plot(df, "actual", "fitted",
+pr_plot(df, "fitted", "actual",
         "sample(c(1, 2), n(), TRUE)",
         "sample(c(3, 4), n(), TRUE)",
         "sample(c(5, 6), n(), TRUE)")

@@ -4,17 +4,17 @@
 \alias{prec_rec}
 \title{prec_rec}
 \usage{
-prec_rec(actual, fitted)
+prec_rec(fitted, actual)
 }
 \arguments{
-\item{actual}{Vector with two levels}
-
 \item{fitted}{Vector with values between 0 and 1}
+
+\item{actual}{Vector with two levels}
 }
 \description{
 Precision recall calculation
 }
 \examples{
-ezplot:::prec_rec(sample(c(TRUE, FALSE), 1, replace = TRUE), runif(1))
-ezplot:::prec_rec(sample(c(TRUE, FALSE), 5, replace = TRUE), runif(5))
+ezplot:::prec_rec(runif(1), sample(c(TRUE, FALSE), 1, replace = TRUE))
+ezplot:::prec_rec(runif(5), sample(c(TRUE, FALSE), 5, replace = TRUE))
 }

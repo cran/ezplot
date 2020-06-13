@@ -5,11 +5,13 @@
 #' @param alpha alpha
 #' @export
 #' @examples
+#' library(tsibbledata)
 #' density_plot(mtcars, "wt", "cyl")
-#' density_plot(subset(tsibbledata::olympic_running, Length == "100m" & Year >= 1980),
+#' density_plot(subset(tsibbledata::olympic_running, Length == 100 & Year >= 1980),
 #'              "Time", "Year - Year %% 10", "Sex", facet_scales = "free", facet_ncol = 1, adjust = 2)
 density_plot = function(data, x, group = NULL, facet_x = NULL,
                         facet_y = NULL,
+                        palette = ez_col,
                         adjust = 1,
                         alpha = 0.5,
                         facet_scales = "fixed",
@@ -32,11 +34,11 @@ density_plot = function(data, x, group = NULL, facet_x = NULL,
                    outline.type = "full",
                    adjust = adjust,
                    alpha = alpha) +
-      scale_fill_manual(names(group), values = ez_col(n_distinct(gdata[["group"]])),
+      scale_fill_manual(names(group), values = palette(n_distinct(gdata[["group"]])),
                         labels = function(x) paste0(x, "   "))
   } else {
     g = ggplot(gdata) +
-      geom_density(aes(x), fill = ez_col(1))
+      geom_density(aes(x), fill = palette(1))
 
   }
 

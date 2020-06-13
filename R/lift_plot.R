@@ -3,8 +3,6 @@
 #' @inheritParams area_plot
 #' @inheritParams line_plot
 #' @inheritParams roc_plot
-#' @param actual Vector of actuals values
-#' @param fitted Vector of fitted values
 #' @export
 #' @examples
 #' library(ggplot2)
@@ -13,26 +11,28 @@
 #'                 runif = runif(n))
 #' df[["fitted"]] = runif(n) ^ ifelse(df[["actual"]] == 1, 0.5, 2)
 #'
-#' ggplot(df) +
-#'   geom_density(aes(fitted, fill = actual), alpha = 0.5)
+#' density_plot(df, "fitted", "actual")
 #'
-#' lift_plot(df, "actual", "fitted")
-#' lift_plot(df, "actual", "runif", size_line = 0.5)
+#' lift_plot(df, "fitted", "actual")
+#' lift_plot(df, "fitted", "actual") + scale_y_log10()
+#' lift_plot(df, "runif", "actual", size_line = 0.5)
 #'
 #'\donttest{
 #' library(dplyr, warn.conflicts = FALSE)
-#' lift_plot(df, "actual", "fitted", "sample(c(1, 2), n(), TRUE)")
+#' lift_plot(df, "fitted", "actual", "sample(c(1, 2), n(), TRUE)")
 #'
-#' lift_plot(df, "actual", "fitted",
+#' lift_plot(df, "fitted", "actual",
 #'         "sample(c(1, 2), n(), TRUE)",
 #'         "sample(c(3, 4), n(), TRUE)")
 #'
-#' lift_plot(df, "actual", "fitted",
+#' lift_plot(df, "fitted", "actual",
 #'         "sample(c(1, 2), n(), TRUE)",
 #'         "sample(c(3, 4), n(), TRUE)",
 #'         "sample(c(5, 6), n(), TRUE)")
 #'}
-lift_plot = function(data, actual, fitted,
+lift_plot = function(data,
+                     fitted,
+                     actual,
                      group = NULL,
                      facet_x = NULL,
                      facet_y = NULL,
@@ -51,14 +51,12 @@ lift_plot = function(data, actual, fitted,
     transmute(!!!lapply(cols,
                         function(x) rlang::parse_quo(x, env = env)))
 
-  total = data %>%
-    tibble::as_tibble() %>%
-    summarize(values = list(perf(actual, fitted, "lift", "rpp")))
-
   gdata = data %>%
     group_by(!!!syms(intersect(names(cols),
                                c("group", "facet_x", "facet_y")))) %>%
-    summarize(values = list(perf(actual, fitted, "lift", "rpp"))) %>%
+    summarize(values = list(perf(fitted, actual,
+                                 x_measure = "rpp",
+                                 y_measure = "lift"))) %>%
     ungroup %>%
     tidyr::unnest(values)
 
@@ -66,13 +64,14 @@ lift_plot = function(data, actual, fitted,
 
   if (exists("group", gdata)) {
     g = g +
-      geom_line(aes(x = x,
+      geom_path(aes(x = x,
                     y = y,
-                    colour = factor(group))) +
+                    colour = factor(group)),
+                size = size_line) +
       scale_colour_manual(NULL, values = ez_col(n_distinct(gdata[["group"]])))
   } else {
     g = g +
-      geom_line(aes(x = x,
+      geom_path(aes(x = x,
                     y = y),
                 size = size_line)
   }
@@ -80,9 +79,8 @@ lift_plot = function(data, actual, fitted,
   g = quick_facet(g)
 
   g = g +
-    geom_line(data = data.frame(x = c(0, 1)),
-              y = 1,
-              aes(x,),
+    geom_path(data = data.frame(x = c(0, 1), y = 1),
+              aes(x, y),
               size = size_line,
               linetype = 2) +
     theme_minimal(size) +
@@ -100,45 +98,3 @@ lift_plot = function(data, actual, fitted,
 
 globalVariables(c("values"))
 
-
-
-#' perf
-#' @description Precision recall calculation
-#' @param actual Vector with two levels
-#' @param fitted Vector with values between 0 and 1
-#' @param y_value metric for ROCR::performance
-#' @param x_value metric for ROCR::performance
-#' @examples
-#' ezplot:::perf(sample(c(TRUE, FALSE), 1, replace = TRUE), runif(1), "lift", "rpp")
-#' ezplot:::perf(sample(c(TRUE, FALSE), 10, replace = TRUE), runif(10), "lift", "rpp")
-#' ezplot:::perf(sample(c(TRUE, FALSE), 5, replace = TRUE), runif(5), "prec", "rec")
-#' ezplot:::perf(sample(c(TRUE, FALSE), 5, replace = TRUE), runif(5), "tpr", "fpr")
-perf = function(actual, fitted, y_value, x_value) {
-
-  ind = !is.na(actual) & !is.na(fitted)
-  actual = actual[ind]
-  fitted = fitted[ind]
-
-  count = sum(actual == actual[1])
-  if (sum(ind) == 0 | count == 0 | count == length(actual)) {
-    return(
-      data.frame(
-        rec = NA,
-        prec = NA
-      )
-    )
-  }
-
-  pred = ROCR::prediction(as.numeric(fitted), actual)
-  perf = ROCR::performance(pred, y_value, x_value)
-
-  x = perf@x.values[[1]]
-  y = perf@y.values[[1]]
-  cutoff = perf@alpha.values[[1]]
-
-  data.frame(x = x,
-             y = y,
-             cutoff = cutoff) %>%
-    filter(is.finite(y))
-
-}

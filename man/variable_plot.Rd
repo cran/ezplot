@@ -10,6 +10,7 @@ variable_plot(
   y,
   group = NULL,
   facet_x = NULL,
+  palette = ez_col,
   size = 14,
   labels_y = ez_labels,
   geom = "line",
@@ -30,6 +31,8 @@ variable_plot(
 \item{group}{A character value. Evaluates to a column.}
 
 \item{facet_x}{A character value. Evaluates to a column.}
+
+\item{palette}{Colour function.}
 
 \item{size}{theme size for \code{use_theme()}. Default is 14.}
 
@@ -54,6 +57,7 @@ Plots variables (multiple "y" values) broken out as vertical
   facets.
 }
 \examples{
+library(tsibble)
 library(tsibbledata)
 variable_plot(ansett, "Week", "Passengers", facet_x = "Class")
 variable_plot(ansett, "Week", "Passengers", facet_x = "Class", yoy = TRUE)

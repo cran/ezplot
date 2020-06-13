@@ -11,6 +11,7 @@
 #' @return A ggplot object.
 #' @export
 #' @examples
+#' library(tsibble)
 #' library(tsibbledata)
 #' secondary_plot(pelt, "Year", "Hare", "Lynx")
 #' secondary_plot(pelt, "Year", c("Hare Population" = "Hare"), c("Lynx Population" = "Lynx"))
@@ -26,6 +27,7 @@ secondary_plot = function (data,
                            y2 = "1",
                            facet_x = NULL,
                            facet_y = NULL,
+                           palette = ez_col,
                            size_line = 1,
                            labels_y1 = ez_labels,
                            labels_y2 = ez_labels,
@@ -91,8 +93,8 @@ secondary_plot = function (data,
                       y2_range,
                       y1_range,
                       y2_adjust)
-  col1 = ez_col(1)
-  col2 = ez_col(2)[2]
+  col1 = palette(1)
+  col2 = palette(2)[2]
 
   g = ggplot(gdata) +
     geom_line(aes(x, y1),

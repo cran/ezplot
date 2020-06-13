@@ -12,33 +12,35 @@
 #'                 runif = runif(n))
 #' df[["fitted"]] = runif(n) ^ ifelse(df[["actual"]] == 1, 0.5, 2)
 #'
-#' ggplot(df) +
-#'   geom_density(aes(fitted, fill = actual), alpha = 0.5)
+#' density_plot(df, "fitted", "actual")
 #'
-#' pr_plot(df, "actual", "fitted")
-#' pr_plot(df, "actual", "runif", size_line = 0.5)
+#' pr_plot(df, "fitted", "actual")
+#' pr_plot(df, "runif", "actual", size_line = 0.5)
 #'
 #'\donttest{
 #' library(dplyr, warn.conflicts = FALSE)
-#' pr_plot(df, "actual", "fitted", "sample(c(1, 2), n(), TRUE)")
+#' pr_plot(df, "fitted", "actual", "sample(c(1, 2), n(), TRUE)")
 #'
-#' pr_plot(df, "actual", "fitted",
+#' pr_plot(df, "fitted", "actual",
 #'         "sample(c(1, 2), n(), TRUE)",
 #'         "sample(c(3, 4), n(), TRUE)")
 #'
-#' pr_plot(df, "actual", "fitted",
+#' pr_plot(df, "fitted", "actual",
 #'         "sample(c(1, 2), n(), TRUE)",
 #'         "sample(c(3, 4), n(), TRUE)",
 #'         "sample(c(5, 6), n(), TRUE)")
 #'}
-pr_plot = function(data, actual, fitted,
-                    group = NULL,
-                    facet_x = NULL,
-                    facet_y = NULL,
-                    size_line = 1,
-                    size = 11,
+pr_plot = function(data,
+                   fitted,
+                   actual,
+                   group = NULL,
+                   facet_x = NULL,
+                   facet_y = NULL,
+                   palette = ez_col,
+                   size_line = 1,
+                   size = 11,
                    labs = "short",
-                    env = parent.frame()) {
+                   env = parent.frame()) {
 
   cols = c(actual = unname(actual),
            fitted = unname(fitted),
@@ -53,12 +55,12 @@ pr_plot = function(data, actual, fitted,
 
   total = data %>%
     tibble::as_tibble() %>%
-    summarize(prec_rec = list(prec_rec(actual, fitted)))
+    summarize(prec_rec = list(prec_rec(fitted, actual)))
 
   gdata = data %>%
     group_by(!!!syms(intersect(names(cols),
                                c("group", "facet_x", "facet_y")))) %>%
-    summarize(prec_rec = list(prec_rec(actual, fitted))) %>%
+    summarize(prec_rec = list(prec_rec(fitted, actual))) %>%
     ungroup %>%
     tidyr::unnest(prec_rec)
 
@@ -66,13 +68,14 @@ pr_plot = function(data, actual, fitted,
 
   if (exists("group", gdata)) {
     g = g +
-      geom_line(aes(x = recall,
+      geom_path(aes(x = recall,
                     y = precision,
-                    colour = factor(group))) +
-      scale_colour_manual(NULL, values = ez_col(n_distinct(gdata[["group"]])))
+                    colour = factor(group)),
+                size = size_line) +
+      scale_colour_manual(NULL, values = palette(n_distinct(gdata[["group"]])))
   } else {
     g = g +
-      geom_line(aes(x = recall,
+      geom_path(aes(x = recall,
                     y = precision),
                 size = size_line)
   }
@@ -88,7 +91,7 @@ pr_plot = function(data, actual, fitted,
   }
 
   g = g +
-    geom_line(data = data.frame(x = c(0, 1)),
+    geom_path(data = data.frame(x = c(0, 1)),
               y = mean(data$actual),
               aes(x, y),
               size = size_line,
@@ -111,12 +114,12 @@ globalVariables(c("precision", "recall"))
 
 #' prec_rec
 #' @description Precision recall calculation
-#' @param actual Vector with two levels
 #' @param fitted Vector with values between 0 and 1
+#' @param actual Vector with two levels
 #' @examples
-#' ezplot:::prec_rec(sample(c(TRUE, FALSE), 1, replace = TRUE), runif(1))
-#' ezplot:::prec_rec(sample(c(TRUE, FALSE), 5, replace = TRUE), runif(5))
-prec_rec = function(actual, fitted) {
+#' ezplot:::prec_rec(runif(1), sample(c(TRUE, FALSE), 1, replace = TRUE))
+#' ezplot:::prec_rec(runif(5), sample(c(TRUE, FALSE), 5, replace = TRUE))
+prec_rec = function(fitted, actual) {
 
   ind = !is.na(actual) & !is.na(fitted)
   actual = actual[ind]

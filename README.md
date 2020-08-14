@@ -51,6 +51,7 @@ devtools::install_github("wkostelecki/ezplot")
 
 ``` r
 library(ezplot)
+library(tsibble)
 library(tsibbledata)
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(lubridate))
@@ -118,7 +119,7 @@ line_plot(hh_budget,
 Weekly aggregation:
 
 ``` r
-area_plot(ansett, x = "Week", y = "Passengers")
+area_plot(ansett, x = "as.Date(Week)", y = "Passengers")
 ```
 
 <img src="man/figures/README-area_plot-1-1.png" style="display: block; margin: auto;" />
@@ -126,7 +127,7 @@ area_plot(ansett, x = "Week", y = "Passengers")
 Add grouping:
 
 ``` r
-area_plot(ansett, x = "Week",
+area_plot(ansett, x = "as.Date(Week)",
           y = c("Weekly Passengers" = "Passengers"),
           "Class")
 ```
@@ -292,6 +293,8 @@ pr_plot(df, "pred", "lab") +
 ```
 
 <img src="man/figures/README-pr_plot-1-1.png" style="display: block; margin: auto;" />
+
+### lift\_plot
 
 ``` r
 set.seed(4)

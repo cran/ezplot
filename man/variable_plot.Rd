@@ -15,6 +15,7 @@ variable_plot(
   labels_y = ez_labels,
   geom = "line",
   size_line = 1,
+  legend_ncol = NULL,
   ylab = NULL,
   yoy = FALSE,
   switch = "y",
@@ -42,6 +43,8 @@ variable_plot(
 
 \item{size_line}{width of line for \code{geom_line()}. Default is 1.}
 
+\item{legend_ncol}{Number of columns in legend.}
+
 \item{ylab}{y label text}
 
 \item{yoy}{Logical used to indicate whether a YOY grouping should be created.
@@ -64,6 +67,7 @@ variable_plot(ansett, "Week", "Passengers", facet_x = "Class", yoy = TRUE)
 variable_plot(pelt, "Year", c("Lynx", "Hare"), "round(Year, -1)")
 variable_plot(hh_budget, "Year", c("Debt", "Expenditure"), "Country")
 variable_plot(PBS, "Type", "Scripts", "Concession", switch = "y", geom = "col")
+\dontrun{
 variable_plot(subset(hh_budget, Year > 2013), "Year",
               c("Debt\n(\% of disposable income)" = "Debt",
                 "Expenditure\nGrowth (\%)" = "Expenditure",
@@ -74,4 +78,5 @@ variable_plot(subset(hh_budget, Year > 2013), "Year",
                 "Expenditure\nGrowth (\%)" = "Expenditure",
                 "Unemployment (\%)" = "Unemployment"),
                group = "Country", geom = "bar")
+}
 }

@@ -16,6 +16,7 @@
 #' variable_plot(pelt, "Year", c("Lynx", "Hare"), "round(Year, -1)")
 #' variable_plot(hh_budget, "Year", c("Debt", "Expenditure"), "Country")
 #' variable_plot(PBS, "Type", "Scripts", "Concession", switch = "y", geom = "col")
+#' \dontrun{
 #' variable_plot(subset(hh_budget, Year > 2013), "Year",
 #'               c("Debt\n(% of disposable income)" = "Debt",
 #'                 "Expenditure\nGrowth (%)" = "Expenditure",
@@ -26,6 +27,7 @@
 #'                 "Expenditure\nGrowth (%)" = "Expenditure",
 #'                 "Unemployment (%)" = "Unemployment"),
 #'                group = "Country", geom = "bar")
+#' }
 variable_plot = function(data,
                          x, y,
                          group = NULL,
@@ -35,6 +37,7 @@ variable_plot = function(data,
                          labels_y = ez_labels,
                          geom = "line",
                          size_line = 1,
+                         legend_ncol = NULL,
                          ylab = NULL,
                          yoy = FALSE,
                          switch = "y",
@@ -127,7 +130,8 @@ variable_plot = function(data,
                  na.rm = TRUE) +
         scale_fill_manual(NULL,
                           values = palette(length(unique(gdata[["group"]]))),
-                          labels = function(x) paste0(x, "   "))
+                          labels = function(x) paste0(x, "   "),
+                          guide = guide_legend(ncol = legend_ncol))
 
       g = g +
         geom_text(aes(x, value,

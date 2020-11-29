@@ -71,14 +71,35 @@ pred = function(fitted, actual) {
 
 #' perf_df
 #' @inheritParams performance_plot
+#' @param quantiles Number of quantiles to show. If \code{NULL}, uses distinct
+#'   values of \code{fitted} for the cutoffs rather than showing quantiles.
 #' @export
 #' @examples
 #' perf_df(mtcars$mpg, mtcars$am)
+#' perf_df(mtcars$mpg, mtcars$am, quantiles = 4)
+#' perf_df(mtcars$mpg, mtcars$am, quantiles = 10)
 #' perf_df(mtcars$wt, mtcars$am==0)
-perf_df = function(fitted, actual) {
+perf_df = function(fitted, actual, quantiles = NULL) {
+  if (!is.null(quantiles)) {
+    quantiles = min(quantiles, length(fitted))
+    bins = pmax(ceiling(seq(0, quantiles, length.out = length(fitted))), 1)
+    r = rank(fitted, ties.method = "first")
+    x = data.frame(r,
+                   # o,
+                   fitted,
+                   c = bins[r]) %>%
+      dplyr::group_by(c) %>%
+      dplyr::mutate(qrank = min(r))
+
+    fitted = x$qrank
+    ocutoffs = x %>%
+      dplyr::group_by(qrank) %>%
+      dplyr::summarize(cutoff = min(fitted),
+                       .groups = "drop")
+  }
   pred = pred(fitted, actual)
-  # performance(pred, )
-  df = data.frame(cutoffs = pred@cutoffs[[1]],
+
+  df = data.frame(cutoff = pred@cutoffs[[1]],
                   fp = pred@fp[[1]],
                   tp = pred@tp[[1]],
                   tn = pred@tn[[1]],
@@ -86,14 +107,25 @@ perf_df = function(fitted, actual) {
                   pp = pred@n.pos.pred[[1]],
                   np = pred@n.neg.pred[[1]])
 
-  for (metric in c("rpp", "acc", "fpr", "tpr", "fnr", "tnr", "prec", "lift", "auc", "aucpr")) {
+  extra_metrics = c("rpp", "acc", "fpr", "tpr", "fnr", "tnr", "prec", "lift", "auc", "aucpr")
+  if (!is.null(quantiles)) extra_metrics = setdiff(extra_metrics, c("auc", "aucpr"))
+
+  for (metric in extra_metrics) {
 
     df[[metric]] = ROCR::performance(pred, metric)@y.values[[1]]
 
   }
-  df %>%
-    dplyr::mutate(ks = abs(fpr - tpr)) %>%
-    dplyr::arrange(desc(cutoffs))
+  df = df %>%
+    dplyr::mutate(ks = abs(fpr - tpr),
+                  f1 = 2 * prec * tpr / (prec + tpr))
+  if (!is.null(quantiles)) {
+    df = df %>%
+      utils::tail(quantiles) %>%
+      dplyr::mutate(cutoff = rev(ocutoffs$cutoff)) %>%
+      cbind(quantile = seq_len(quantiles), .) %>%
+      identity()
+  }
+  df
 }
 
-globalVariables(c("tpr", "fpr", "cutoffs"))
+globalVariables(c("tpr", "fpr", "cutoffs", "prec", "qrank"))

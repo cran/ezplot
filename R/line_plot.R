@@ -5,6 +5,7 @@
 #' @param yoy Logical used to indicate whether a YOY grouping should be created.
 #'   Default is \code{FALSE}.
 #' @param size_line width of line for \code{geom_line()}. Default is 1.
+#' @param limits_y vector of c(min, max) y-axis limits
 #' @return A ggplot object.
 #' @export
 #' @import ggplot2 dplyr
@@ -13,7 +14,7 @@
 #' library(tsibbledata)
 #' line_plot(ansett, x = "Week", y = "Passengers")
 #' line_plot(ansett, x = "Week", y = "Passengers", "Class")
-#' line_plot(pelt, "Year", "Hare")
+#' line_plot(pelt, "Year", "Hare", limits_y = c(0, NA))
 #' line_plot(pelt, "Year", c("Hare", "Lynx"))
 #' line_plot(pelt, "Year", "Hare", use_theme = ggplot2::theme_bw)
 #' line_plot(pelt, "Year", c("Hare Population" = "Hare"))
@@ -29,8 +30,10 @@ line_plot = function(data,
                      reorder = c("group", "facet_x", "facet_y"),
                      palette = ez_col,
                      labels_y = ez_labels,
+                     limits_y = c(NA, NA),
                      use_theme = theme_ez,
-                     facet_scales = "fixed") {
+                     facet_scales = "fixed",
+                     legend_ncol = NULL) {
 
   stopifnot(sum(c(length(y) > 1, !is.null(group), yoy)) <= 1)
 
@@ -90,7 +93,8 @@ line_plot = function(data,
                   size = size_line) +
         scale_color_manual(NULL,
                            values = palette(length(unique(gdata[["group"]]))),
-                           labels = function(x) paste0(x, "   ")) +
+                           labels = function(x) paste0(x, "   "),
+                           guide = guide_legend(ncol = legend_ncol)) +
         scale_x_continuous(breaks = c(1, 91, 182, 274, 366),
                            limits = c(1, 366),
                            labels = c("Jan", "Apr", "Jul", "Oct", "Jan")) +
@@ -101,7 +105,8 @@ line_plot = function(data,
                   size = size_line) +
         scale_colour_manual(NULL,
                             values = palette(length(unique(gdata[["group"]]))),
-                            labels = function(x) paste0(x, "   "))
+                            labels = function(x) paste0(x, "   "),
+                            guide = guide_legend(ncol = legend_ncol))
     }
   } else {
     g = g +
@@ -115,7 +120,7 @@ line_plot = function(data,
   g = g +
     xlab(names(x)) +
     ylab(names(y)) +
-    scale_y_continuous(labels = labels_y) +
+    scale_y_continuous(labels = labels_y, limits = limits_y) +
     ylab(names(y)) +
     use_theme(size) +
     theme(legend.key.height = grid::unit(0, "lines"))

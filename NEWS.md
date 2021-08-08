@@ -1,5 +1,12 @@
+# ezplot 0.7.2
+- updated histogram_plot to pass bare y to geom_histogram
+- added limits_y argument to line_plot
+
+# ezplot 0.7.0
+- added instantaneous lift to perf_df
+
 # ezplot 0.6.6
-- added quantiles option to perf-df
+- added quantiles option to perf_df
 - fixed precision-recall plots when categorical target is used
 
 # ezplot 0.6.5

@@ -17,8 +17,10 @@ line_plot(
   reorder = c("group", "facet_x", "facet_y"),
   palette = ez_col,
   labels_y = ez_labels,
+  limits_y = c(NA, NA),
   use_theme = theme_ez,
-  facet_scales = "fixed"
+  facet_scales = "fixed",
+  legend_ncol = NULL
 )
 }
 \arguments{
@@ -48,10 +50,14 @@ Default is \code{c("group", "facet_x", "facet_y")}.}
 
 \item{labels_y}{label formatting function}
 
+\item{limits_y}{vector of c(min, max) y-axis limits}
+
 \item{use_theme}{ggplot theme function}
 
 \item{facet_scales}{Option passed to scales argument in \code{facet_wrap} or
 \code{facet_grid}. Default is \code{"fixed"}.}
+
+\item{legend_ncol}{Number of columns in legend.}
 }
 \value{
 A ggplot object.
@@ -64,7 +70,7 @@ library(tsibble)
 library(tsibbledata)
 line_plot(ansett, x = "Week", y = "Passengers")
 line_plot(ansett, x = "Week", y = "Passengers", "Class")
-line_plot(pelt, "Year", "Hare")
+line_plot(pelt, "Year", "Hare", limits_y = c(0, NA))
 line_plot(pelt, "Year", c("Hare", "Lynx"))
 line_plot(pelt, "Year", "Hare", use_theme = ggplot2::theme_bw)
 line_plot(pelt, "Year", c("Hare Population" = "Hare"))

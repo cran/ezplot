@@ -10,7 +10,7 @@
 #' @export
 #' @import ggplot2 dplyr
 #' @examples
-#' library(tsibble)
+#' suppressPackageStartupMessages(library(tsibble))
 #' library(tsibbledata)
 #' line_plot(ansett, x = "Week", y = "Passengers")
 #' line_plot(ansett, x = "Week", y = "Passengers", "Class")
@@ -54,7 +54,7 @@ line_plot = function(data,
   )
 
   if (length(y) > 1) {
-    gdata = tidyr::gather_(gdata, "group", "y", paste0("y", seq_along(y)))
+    gdata = tidyr::gather(gdata, "group", "y", paste0("y", seq_along(y)))
     gdata[["group"]] =  factor(gdata[["group"]],
                                paste0("y", seq_along(y)),
                                names(y))

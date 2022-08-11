@@ -1,7 +1,7 @@
 Package: ezplot
 Type: Package
 Title: Functions for Common Chart Types
-Version: 0.7.2
+Version: 0.7.3
 Author: Wojtek Kostelecki
 Maintainer: Wojtek Kostelecki <wojtek.kostelecki@gmail.com>
 Description: Wrapper for the 'ggplot2' package that creates a variety of common
@@ -10,12 +10,12 @@ Description: Wrapper for the 'ggplot2' package that creates a variety of common
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: R (>= 3.3)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
 Imports: dplyr, forcats, ggplot2, lubridate, rlang
 Suggests: covr, DT, e1071, knitr, methods, miniUI, rmarkdown, ROCR,
         shiny, stats, testthat, tibble, tidyr, tsibble, tsibbledata
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2021-08-07 23:16:43 UTC; wkost
+Packaged: 2022-08-11 21:37:53 UTC; wkost
 Repository: CRAN
-Date/Publication: 2021-08-08 04:10:02 UTC
+Date/Publication: 2022-08-11 22:00:05 UTC

@@ -6,7 +6,7 @@ knitr::opts_chunk$set(
 
 ## ---- fig.show='hold'---------------------------------------------------------
 library(ezplot)
-library(tsibble)
+suppressPackageStartupMessages(library(tsibble))
 library(tsibbledata)
 suppressPackageStartupMessages(library(dplyr))
 suppressPackageStartupMessages(library(lubridate))

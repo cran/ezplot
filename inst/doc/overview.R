@@ -8,7 +8,7 @@ knitr::opts_chunk$set(
 
 ## ----setup--------------------------------------------------------------------
 library(ezplot)
-library(tsibble)
+suppressPackageStartupMessages(library(tsibble))
 library(tsibbledata)
 suppressPackageStartupMessages(library(lubridate))
 library(ggplot2)

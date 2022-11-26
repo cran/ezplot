@@ -13,6 +13,7 @@ line_plot(
   facet_y = NULL,
   yoy = FALSE,
   size_line = 1,
+  points = FALSE,
   size = 11,
   reorder = c("group", "facet_x", "facet_y"),
   palette = ez_col,
@@ -20,6 +21,7 @@ line_plot(
   limits_y = c(NA, NA),
   use_theme = theme_ez,
   facet_scales = "fixed",
+  na.rm = FALSE,
   legend_ncol = NULL
 )
 }
@@ -41,6 +43,8 @@ Default is \code{FALSE}.}
 
 \item{size_line}{width of line for \code{geom_line()}. Default is 1.}
 
+\item{points}{logical. Option to include points}
+
 \item{size}{theme size for \code{use_theme()}. Default is 14.}
 
 \item{reorder}{A character vector specifying the group variables to reorder.
@@ -56,6 +60,8 @@ Default is \code{c("group", "facet_x", "facet_y")}.}
 
 \item{facet_scales}{Option passed to scales argument in \code{facet_wrap} or
 \code{facet_grid}. Default is \code{"fixed"}.}
+
+\item{na.rm}{logical. Option to exclude NAs}
 
 \item{legend_ncol}{Number of columns in legend.}
 }

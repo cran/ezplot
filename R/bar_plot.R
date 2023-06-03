@@ -4,6 +4,7 @@
 #' @param rescale_y Rescaling factor for y-axis limits
 #' @param label_cutoff Cutoff size (proportion of y data range) for excluding
 #'   labels
+#' @param position Either \code{"stack"} (default), \code{"fill"} or \code{"dodge"}
 #' @param label_pos Position of labels. Can be "auto", "inside", "top", "both"
 #'   or "none".
 #' @param coord_flip logical (default is FALSE). If TRUE, flips the x and y
@@ -23,6 +24,8 @@
 #'          c(Passengers = "ifelse(Class == 'Economy', Passengers, -Passengers)"),
 #'          "Class", label_pos = "both")
 #' bar_plot(ansett, "year(Week)", "Passengers", "Class", label_pos = "both", coord_flip = TRUE)
+#' bar_plot(mtcars, "factor(cyl)", "1", "am", position = "dodge")
+#' bar_plot(mtcars, "factor(cyl)", "1", "am", position = "dodge", coord_flip = TRUE)
 bar_plot = function(data,
                     x,
                     y = "1",
@@ -68,7 +71,7 @@ bar_plot = function(data,
 
   gdata = reorder_levels(gdata, cols = reorder)
 
-  if (any("group" == names(gdata))) {
+  if (any("group" == names(gdata)) && position != "dodge") {
     gdata[["group"]] = forcats::fct_rev(gdata[["group"]])
   }
 
@@ -76,6 +79,8 @@ bar_plot = function(data,
     if (position == "fill") {
       label_pos = "inside"
     } else if (!exists("group", gdata) || length(unique(gdata[["group"]])) == 1) {
+      label_pos = "top"
+    } else if (position == "dodge") {
       label_pos = "top"
     } else {
       label_pos = "inside"
@@ -120,8 +125,20 @@ bar_plot = function(data,
   g = ggplot(gdata)
 
 
-
-  if (exists("group", gdata)) {
+  if (position == "dodge" & exists("group", gdata)) {
+    fill_pal = palette(length(unique(gdata[["group"]])))
+    g = g +
+      geom_col(aes(x, y,
+                   fill = group),
+               width = width,
+               position = position_dodge(ifelse(coord_flip, -0.9, 0.9)),
+               orientation = "x") +
+      scale_fill_manual(NULL,
+                        values = fill_pal,
+                        labels = function(x) paste0(x, "   "),
+                        # breaks = rev,
+                        guide = guide_legend(ncol = legend_ncol))
+  } else if (exists("group", gdata)) {
 
     fill_pal = rev(palette(length(unique(gdata[["group"]]))))
     g = g +
@@ -144,7 +161,7 @@ bar_plot = function(data,
                width = width)
   }
 
-  if (label_pos %in% c("inside", "both")) {
+  if (label_pos %in% c("inside", "both") && position != "dodge") {
     if (exists("group", gdata)) {
       g = g +
         geom_text(aes(x, ylabel_pos,
@@ -167,7 +184,8 @@ bar_plot = function(data,
   if (label_pos %in% c("top", "both")) {
     top_labels = gdata %>%
       group_by(!!!syms(intersect(names(gdata),
-                                 c("x", "facet_x", "facet_y")))) %>%
+                                 c("x", "facet_x", "facet_y",
+                                   if(position == "dodge") "group" else NULL)))) %>%
       summarize(y_range = y_range[1],
                 top_y = sum(y[y > 0], na.rm = TRUE),
                 y = sum(y, na.rm = TRUE)) %>%
@@ -178,17 +196,19 @@ bar_plot = function(data,
       geom_text(data = top_labels,
                 aes(x,
                     top_y + y_range / 100,
-                    label = top_ylabel_text),
+                    label = top_ylabel_text,
+                    group = group),
                 size = size / 4,
+                position = position_dodge(ifelse(coord_flip, -0.9, 0.9)),
                 vjust = if (coord_flip) 0.38 else -0.2,
                 hjust = if (coord_flip) 0 else 0.5)
   }
 
   g = quick_facet(g, scales = facet_scales)
 
-  expand = c((rescale_y - 1) * any(gdata[["y"]] < 0) * (position == "stack"),
+  expand = c((rescale_y - 1) * any(gdata[["y"]] < 0) * (position %in% c("stack", "dodge")),
              0,
-             (rescale_y - 1) * any(gdata[["y"]] >= 0) * (position == "stack"),
+             (rescale_y - 1) * any(gdata[["y"]] >= 0) * (position %in% c("stack", "dodge")),
              0)
 
   g = g +

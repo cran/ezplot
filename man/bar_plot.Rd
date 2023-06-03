@@ -68,7 +68,7 @@ labels}
 
 \item{use_theme}{ggplot theme function}
 
-\item{position}{Either \code{"stack"} (default) or \code{"fill"}}
+\item{position}{Either \code{"stack"} (default), \code{"fill"} or \code{"dodge"}}
 
 \item{facet_scales}{Option passed to scales argument in \code{facet_wrap} or
 \code{facet_grid}. Default is \code{"fixed"}.}
@@ -96,4 +96,6 @@ bar_plot(ansett, "Airports",
          c(Passengers = "ifelse(Class == 'Economy', Passengers, -Passengers)"),
          "Class", label_pos = "both")
 bar_plot(ansett, "year(Week)", "Passengers", "Class", label_pos = "both", coord_flip = TRUE)
+bar_plot(mtcars, "factor(cyl)", "1", "am", position = "dodge")
+bar_plot(mtcars, "factor(cyl)", "1", "am", position = "dodge", coord_flip = TRUE)
 }

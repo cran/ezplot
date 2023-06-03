@@ -1,3 +1,9 @@
+# ezplot 0.7.7
+- added dodge option to bar_plot
+
+# ezplot 0.7.6
+- fixed point colour in line_plot
+
 # ezplot 0.7.5
 - fixed warnings caused by ggplot changes
 

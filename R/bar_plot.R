@@ -71,7 +71,7 @@ bar_plot = function(data,
 
   gdata = reorder_levels(gdata, cols = reorder)
 
-  if (any("group" == names(gdata)) && position != "dodge") {
+  if ((exists("group", gdata) & (position != "dodge")) | (exists("group", gdata) & (position == "dodge") & coord_flip)) {
     gdata[["group"]] = forcats::fct_rev(gdata[["group"]])
   }
 
@@ -131,12 +131,12 @@ bar_plot = function(data,
       geom_col(aes(x, y,
                    fill = group),
                width = width,
-               position = position_dodge(ifelse(coord_flip, -0.9, 0.9)),
+               position = position_dodge(0.9),
                orientation = "x") +
       scale_fill_manual(NULL,
-                        values = fill_pal,
+                        values = if (coord_flip) rev(fill_pal) else fill_pal,
                         labels = function(x) paste0(x, "   "),
-                        # breaks = rev,
+                        breaks = if (coord_flip) rev else identity,
                         guide = guide_legend(ncol = legend_ncol))
   } else if (exists("group", gdata)) {
 
@@ -191,17 +191,27 @@ bar_plot = function(data,
                 y = sum(y, na.rm = TRUE)) %>%
       ungroup %>%
       mutate(top_ylabel_text = labels_y(signif(y, 3)))
-
-    g = g +
-      geom_text(data = top_labels,
-                aes(x,
-                    top_y + y_range / 100,
-                    label = top_ylabel_text,
-                    group = group),
-                size = size / 4,
-                position = position_dodge(ifelse(coord_flip, -0.9, 0.9)),
-                vjust = if (coord_flip) 0.38 else -0.2,
-                hjust = if (coord_flip) 0 else 0.5)
+    if (exists("group", top_labels)) {
+      g = g +
+        geom_text(data = top_labels,
+                  aes(x,
+                      top_y + y_range / 100,
+                      label = top_ylabel_text,
+                      group = group),
+                  size = size / 4,
+                  position = position_dodge(0.9),
+                  vjust = if (coord_flip) 0.38 else -0.2,
+                  hjust = if (coord_flip) 0 else 0.5)
+    } else {
+      g = g +
+        geom_text(data = top_labels,
+                  aes(x,
+                      top_y + y_range / 100,
+                      label = top_ylabel_text),
+                  size = size / 4,
+                  vjust = if (coord_flip) 0.38 else -0.2,
+                  hjust = if (coord_flip) 0 else 0.5)
+    }
   }
 
   g = quick_facet(g, scales = facet_scales)

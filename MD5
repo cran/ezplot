@@ -1,10 +1,10 @@
-500a24aeb7273a815c8022e641f62065 *DESCRIPTION
+17551a9525c8a496bb281e8005bd6b53 *DESCRIPTION
 eeb99a4887017cee048e5d5f6b3ff647 *LICENSE
 524660a0953bc33e6a24c4484d0224da *NAMESPACE
-f266703a3dd017702a94f0c49dd1c3d8 *NEWS.md
+321a39924249e4ff0fe67990ee6d0ff1 *NEWS.md
 ba3425154e6f6116dcf0c094b40bbac7 *R/agg_data.R
 16e52e992138b0ca05ef80d226075959 *R/area_plot.R
-bcc69398f12ad0a49b227db099e37227 *R/bar_plot.R
+b40829ca3b99a1f0a05cbdf693b8cb54 *R/bar_plot.R
 418d093e35e8812d84de5d744cf06733 *R/calendar_plot.R
 d41d8cd98f00b204e9800998ecf8427e *R/data.R
 3ddbec6b71598b988d591fb75156523a *R/density_plot.R
@@ -40,7 +40,7 @@ e1d1a2ec18680d799bc428511a5120a9 *README.md
 b8e81de918676fe9138b2c119be639c8 *build/vignette.rds
 c37aedd625ddc5f8077f750e1e49be56 *inst/doc/basics.R
 0ccdb8c09dd14d76ebbee5fa7bdfc438 *inst/doc/basics.Rmd
-cd9b9d19025df5499d6a8e4818edaa92 *inst/doc/basics.html
+9e6a344c4155ad43580f43fbc0efb2e0 *inst/doc/basics.html
 0f5ec3c480f03fa40813ba62f9b7a597 *inst/doc/overview.R
 a02e2385b602ddecadf5d1e1fa3c835d *inst/doc/overview.Rmd
 bb51839ca9c9849515ca58a0de329f50 *inst/doc/overview.html

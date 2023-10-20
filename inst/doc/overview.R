@@ -1,4 +1,4 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -20,20 +20,20 @@ line_plot(ansett, x = "Week", y = "Passengers")
 ## -----------------------------------------------------------------------------
 line_plot(ansett, x = "Week", y = "Passengers", group = "Class")
 
-## ---- fig.width = 7, fig.height = 6-------------------------------------------
+## ----fig.width = 7, fig.height = 6--------------------------------------------
 line_plot(ansett, x = "Week", y = "Passengers",
           group = "Class", facet_x = "Airports",
           facet_scales = "free_y", size = 10) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.38, hjust = 1))
 
-## ---- fig.height = 5----------------------------------------------------------
+## ----fig.height = 5-----------------------------------------------------------
 line_plot(gafa_stock, "Date", c("Closing Stock Price" = "Close"),
           facet_y = "Symbol",
           facet_scales = "free_y",
           yoy = TRUE,
           labels = function(x) ez_labels(x, prepend = "$"))
 
-## ---- fig.width = 7, fig.height = 5-------------------------------------------
+## ----fig.width = 7, fig.height = 5--------------------------------------------
 line_plot(hh_budget,
           "Year",
           c("DI", "Expenditure", "Savings"),
@@ -50,7 +50,7 @@ area_plot(ansett, x = "as.Date(Week)",
           y = c("Weekly Passengers" = "Passengers"),
           "Class")
 
-## ---- fig.width = 7, fig.height = 4-------------------------------------------
+## ----fig.width = 7, fig.height = 4--------------------------------------------
 area_plot(ansett,
           "year(Week) + (month(Week) - 1) / 12",
           y = c("Monthly Passengers" = "Passengers"),
@@ -64,7 +64,7 @@ bar_plot(subset(aus_retail, year(Month) >= 2010),
          x = "year(Month)",
          y = "Turnover")
 
-## ---- fig.width = 7, fig.height = 4-------------------------------------------
+## ----fig.width = 7, fig.height = 4--------------------------------------------
 bar_plot(subset(aus_retail, year(Month) >= 2010), 
          x = "year(Month)",
          y = "Turnover",

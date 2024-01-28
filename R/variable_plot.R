@@ -11,23 +11,8 @@
 #' @examples
 #' suppressPackageStartupMessages(library(tsibble))
 #' library(tsibbledata)
-#' variable_plot(ansett, "Week", "Passengers", facet_x = "Class")
 #' variable_plot(ansett, "Week", "Passengers", facet_x = "Class", yoy = TRUE)
 #' variable_plot(pelt, "Year", c("Lynx", "Hare"), "round(Year, -1)")
-#' variable_plot(hh_budget, "Year", c("Debt", "Expenditure"), "Country")
-#' variable_plot(PBS, "Type", "Scripts", "Concession", switch = "y", geom = "col")
-#' \dontrun{
-#' variable_plot(subset(hh_budget, Year > 2013), "Year",
-#'               c("Debt\n(% of disposable income)" = "Debt",
-#'                 "Expenditure\nGrowth (%)" = "Expenditure",
-#'                 "Unemployment (%)" = "Unemployment"),
-#'                facet_x = "Country", geom = "bar")
-#' variable_plot(subset(hh_budget, Year > 2013), "Year",
-#'               c("Debt\n(% of disposable income)" = "Debt",
-#'                 "Expenditure\nGrowth (%)" = "Expenditure",
-#'                 "Unemployment (%)" = "Unemployment"),
-#'                group = "Country", geom = "bar")
-#' }
 variable_plot = function(data,
                          x, y,
                          group = NULL,
@@ -139,7 +124,7 @@ variable_plot = function(data,
                       group = group,
                       label = ylabel_text),
                   position = position_dodge(width = 0.9),
-                  size = size / 4 * label_rescale,
+                  size = size * 0.8 / ggplot2::.pt * label_rescale,
                   na.rm = TRUE) +
         geom_text(aes(x, value + y_space),
                   label = "",
@@ -156,7 +141,7 @@ variable_plot = function(data,
       g = g +
         geom_text(aes(x, value, vjust = ifelse(value >= 0, -0.2, 1.4),
                       label = ylabel_text),
-                  size = size / 4 * label_rescale,
+                  size = size * 0.8 / ggplot2::.pt * label_rescale,
                   na.rm = TRUE) +
         geom_text(aes(x, value + y_space),
                   label = "",

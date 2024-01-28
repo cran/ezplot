@@ -23,13 +23,16 @@ bar_plot(
  },
   labels_x = identity,
   label_pos = c("auto", "inside", "top", "both", "none"),
+  label_inside = c("y", "absolute", "share", "percent", "both"),
   rescale_y = 1.1,
   label_cutoff = 0.12,
   use_theme = theme_ez,
   position = "stack",
   facet_scales = "fixed",
   legend_ncol = NULL,
-  coord_flip = FALSE
+  coord_flip = FALSE,
+  angle = 0,
+  repel = FALSE
 )
 }
 \arguments{
@@ -61,6 +64,8 @@ Default is \code{c("group", "facet_x", "facet_y")}.}
 \item{label_pos}{Position of labels. Can be "auto", "inside", "top", "both"
 or "none".}
 
+\item{label_inside}{Value to display inside bar segments. Options are "y", "absolute", "percent", "share" or "both".}
+
 \item{rescale_y}{Rescaling factor for y-axis limits}
 
 \item{label_cutoff}{Cutoff size (proportion of y data range) for excluding
@@ -77,6 +82,10 @@ labels}
 
 \item{coord_flip}{logical (default is FALSE). If TRUE, flips the x and y
 coordinate using ggplot2::coord_flip()}
+
+\item{angle}{angle for geom_text(_repel)}
+
+\item{repel}{logical (default if FALSE). If TRUE, uses ggrepel for geom_text}
 }
 \value{
 A ggplot object.
@@ -88,15 +97,9 @@ bar_plot
 library(tsibble)
 library(tsibbledata)
 library(lubridate)
-bar_plot(ansett, "year(Week)", "Passengers", size = 16, rescale_y = 1.5)
-bar_plot(ansett, "year(Week)", "Passengers", "Class")
-bar_plot(ansett, "Airports", c("Share of Passengers" = "Passengers"), "Class", position = "fill")
-bar_plot(ansett, "Airports", "Passengers", "Class", reorder = NULL, label_pos = "both")
-bar_plot(ansett, "Airports",
-         c(Passengers = "ifelse(Class == 'Economy', Passengers, -Passengers)"),
-         "Class", label_pos = "both")
-bar_plot(ansett, "year(Week)", "Passengers", "Class", label_pos = "both", coord_flip = TRUE)
-bar_plot(mtcars, "factor(cyl)", "1", "am", position = "dodge")
-bar_plot(mtcars, "factor(cyl)", "1", "am", position = "dodge", coord_flip = TRUE)
-bar_plot(mtcars, "factor(cyl)", "1", "am", position = "dodge", coord_flip = TRUE, rescale_y = 2)
+
+bar_plot(ansett, "year(Week)", "Passengers")
+bar_plot(ansett, "year(Week)", "Passengers", "Class", label_pos = "both")
+bar_plot(ansett, "year(Week)", "Passengers", "Class", label_pos = "both", label_inside = "both")
+bar_plot(ansett, "year(Week)", "Passengers", "Class", coord_flip = TRUE)
 }

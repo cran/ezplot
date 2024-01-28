@@ -1,5 +1,15 @@
+# ezplot 0.7.13
+- fixed row names in perf_df()
+
+# ezplot 0.7.12
+- matched geom_text and axis text font size
+- bar_plot updates:
+ - added repel/angle option to labels
+ - added absolute/percent option to inside labels
+
 # ezplot 0.7.11
-- fixed top label position in bar_plot
+- bar_plot updates:
+ - fixed top label position in bar_plot
 
 # ezplot 0.7.10
 - fixed clipping of line_plot points
